@@ -30,6 +30,16 @@ function createNav() {
 };
 createNav();
 
+//which section is being viewed
+function isInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+}
 
 // smoothly scroll to the required section
 ulist.addEventListener('click', function (evt) {
@@ -45,12 +55,24 @@ ulist.addEventListener('click', function (evt) {
 		listy[i].classList.remove('selected');
 	}
 	evt.target.classList.add('selected');
-	console.log(listy);
+
 	testItem.classList.add('your-active-class');
 })
 
-// add and remove the navigation bar while scrolling
+// change functionalities while scrolling
 window.addEventListener('scroll', function (event) {
+	//select section in viewport 
+	let listy = document.querySelectorAll('li');
+	for (let i=0; i<nodes.length; i++) {
+		nodes[i].classList.remove('your-active-class');
+		listy[i].classList.remove('selected');
+		if (isInViewport(nodes[i])) {
+			listy[i].classList.add('selected');
+			nodes[i].classList.add('your-active-class');
+		}
+	}
+
+	//show navigation bar while scrolling
 	heading.classList.remove('visuallyhidden');
 	heading.addEventListener('transitioned', function (e) {
 		heading.classList.remove('hidden');
