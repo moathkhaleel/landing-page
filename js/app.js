@@ -17,6 +17,7 @@ const nodes = document.querySelectorAll('section');
 const ulist = document.querySelector('#navbar__list');
 const navFragment = document.createDocumentFragment();
 const heading = document.querySelector('.page__header');
+const sec1offset = nodes[0].offsetTop;
 
 // Initially populate the navigation bar
 function createNav() {
@@ -31,13 +32,11 @@ function createNav() {
 createNav();
 
 //which section is being viewed
-function isInViewport(element) {
+function isInViewport(element, i) {
     const rect = element.getBoundingClientRect();
     return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+		pageYOffset > (sec1offset + 1 + (parseInt(i)*rect.height)) &&
+		pageYOffset < (sec1offset + 1 + (parseInt(i+1)*rect.height)) 		
     );
 }
 
@@ -54,19 +53,16 @@ ulist.addEventListener('click', function (evt) {
 		nodes[i].classList.remove('your-active-class');
 		listy[i].classList.remove('selected');
 	}
-	evt.target.classList.add('selected');
-
-	testItem.classList.add('your-active-class');
 })
 
 // change functionalities while scrolling
 window.addEventListener('scroll', function (event) {
 	//select section in viewport 
-	let listy = document.querySelectorAll('li');
+	listy = document.querySelectorAll('li');
 	for (let i=0; i<nodes.length; i++) {
 		nodes[i].classList.remove('your-active-class');
 		listy[i].classList.remove('selected');
-		if (isInViewport(nodes[i])) {
+		if (isInViewport(nodes[i], i)) {
 			listy[i].classList.add('selected');
 			nodes[i].classList.add('your-active-class');
 		}
